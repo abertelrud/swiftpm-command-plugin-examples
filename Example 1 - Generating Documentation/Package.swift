@@ -15,7 +15,7 @@ let package = Package(
         .plugin(
             name: "MyDocCPlugin",
             capability: .command(
-                intent: .documentationGeneration
+                intent: .documentationGeneration()
             )
         ),
         // This is a sample target on which we can invoke the plugin.

@@ -10,7 +10,7 @@ let package = Package(
         .plugin(
             name: "MyFormatterPlugin",
             capability: .command(
-                intent: .sourceCodeFormatting,
+                intent: .sourceCodeFormatting(),
                 permissions: [
                     .writeToPackageDirectory(reason: "This command reformats source files")
                 ]

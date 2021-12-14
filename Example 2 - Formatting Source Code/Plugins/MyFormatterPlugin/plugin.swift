@@ -4,9 +4,9 @@ import Foundation
 @main
 struct MyFormatterPlugin: CommandPlugin {
     func performCommand(
-       context: PluginContext,
-       targets: [Target],
-       arguments: [String]
+        context: PluginContext,
+        targets: [Target],
+        arguments: [String]
     ) throws {
         // We'll be invoking `swift-format`, so start by locating it.
         let swiftFormatTool = try context.tool(named: "swift-format")
@@ -32,9 +32,14 @@ struct MyFormatterPlugin: CommandPlugin {
             let process = try Process.run(swiftFormatExec, arguments: swiftFormatArgs)
             process.waitUntilExit()
 
-            // The plugin should also report non-zero exit codes from `swift-format` here.
-
-            print("Formatted the source code in \(target.directory).")
+            // Check whether the subprocess invocation was successful.
+            if process.terminationReason == .exit && process.terminationStatus == 0 {
+                print("Formatted the source code in \(target.directory).")
+            }
+            else {
+                let problem = "\(process.terminationReason):\(process.terminationStatus)"
+                Diagnostics.error("swift-format invocation failed: \(problem)")
+            }
         }
     }
 }

@@ -46,9 +46,14 @@ struct MyDocCPlugin: CommandPlugin {
             let process = try Process.run(doccExec, arguments: doccArgs)
             process.waitUntilExit()
 
-            // The plugin should also report non-zero exit codes from `docc` here.
-
-            print("Generated documentation at \(outputDir).")
+            // Check whether the subprocess invocation was successful.
+            if process.terminationReason == .exit && process.terminationStatus == 0 {
+                print("Generated documentation at \(outputDir).")
+            }
+            else {
+                let problem = "\(process.terminationReason):\(process.terminationStatus)"
+                Diagnostics.error("docc invocation failed: \(problem)")
+            }
         }
     }
 }

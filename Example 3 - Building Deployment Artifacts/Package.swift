@@ -17,7 +17,7 @@ let package = Package(
             capability: .command(
                 intent: .custom(
                     verb: "create-distribution-archive",
-                    description: "Creates a .tar file containing release binaries"
+                    description: "Creates a .zip containing release builds of products"
                 )
             )
         )
