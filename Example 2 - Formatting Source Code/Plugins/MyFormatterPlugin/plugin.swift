@@ -9,10 +9,10 @@ struct MyFormatterPlugin: CommandPlugin {
         arguments: [String]
     ) throws {
         // We'll be invoking `swift-format`, so start by locating it.
-        let swiftFormatTool = try context.tool(named: "swift-format")
+        let swiftFormatTool = try context.tool(named: "swiftformat")
 
         // By convention, use a configuration file in the package directory.
-        let configFile = context.package.directory.appending(".swift-format.json")
+        let configFile = context.package.directory.appending(".swiftformat")
 
         // Iterate over the targets we've been asked to format.
         for target in targets {
@@ -24,9 +24,8 @@ struct MyFormatterPlugin: CommandPlugin {
             // file from the package directory.
             let swiftFormatExec = URL(fileURLWithPath: swiftFormatTool.path.string)
             let swiftFormatArgs = [
-                "--configuration", "\(configFile)",
-                "--in-place",
-                "--recursive",
+                "--config", "\(configFile)",
+                "--cache", "\(context.pluginWorkDirectory)",
                 "\(target.directory)"
             ]
             let process = try Process.run(swiftFormatExec, arguments: swiftFormatArgs)
@@ -38,7 +37,7 @@ struct MyFormatterPlugin: CommandPlugin {
             }
             else {
                 let problem = "\(process.terminationReason):\(process.terminationStatus)"
-                Diagnostics.error("swift-format invocation failed: \(problem)")
+                Diagnostics.error("swiftformat invocation failed: \(problem)")
             }
         }
     }

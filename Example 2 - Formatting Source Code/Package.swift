@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "MyFormatterPlugin",
     dependencies: [
-        .package(url: "https://github.com/apple/swift-format.git", from: "0.50500.0"),
+        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.48.0"),
     ],
     targets: [
         .plugin(
@@ -16,7 +16,7 @@ let package = Package(
                 ]
             ),
             dependencies: [
-                .product(name: "swift-format", package: "swift-format"),
+                .product(name: "swiftformat", package: "SwiftFormat"),
             ]
         ),
         // This is a sample target on which we can invoke the plugin.
