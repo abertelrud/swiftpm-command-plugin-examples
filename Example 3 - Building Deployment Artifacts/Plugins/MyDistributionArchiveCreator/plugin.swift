@@ -49,6 +49,20 @@ struct MyDistributionArchiveCreator: CommandPlugin {
             Diagnostics.error("zip invocation failed: \(problem)")
         }
     }
+
+    /// Bridging implementation of new method to call the old one.
+    func performCommand(
+        context: PluginContext,
+        arguments: [String]
+    ) throws {
+        // Extract the target arguments and pass them on to the old method.
+        var argExtractor = ArgumentExtractor(arguments)
+        let targetNames = argExtractor.extractOption(named: "target")
+        let targets = targetNames.isEmpty
+            ? context.package.targets
+            : try context.package.targets(named: targetNames)
+        try self.performCommand(context: context, targets: targets, arguments: arguments)
+    }
 }
 
 extension String: Error { }
