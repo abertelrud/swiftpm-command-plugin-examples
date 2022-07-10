@@ -3,11 +3,15 @@ import Foundation
 
 @main
 struct MyDocCPlugin: CommandPlugin {
-    func performCommand(
-        context: PluginContext,
-        targets: [Target],
-        arguments: [String]
-    ) throws {
+    
+    func performCommand(context: PluginContext, arguments: [String]) throws {
+        // Extract the target arguments. If there are none, we assume all in the package.
+        var argExtractor = ArgumentExtractor(arguments)
+        let targetNames = argExtractor.extractOption(named: "target")
+        let targets = targetNames.isEmpty
+            ? context.package.targets
+            : try context.package.targets(named: targetNames)
+
         // We'll be creating commands that invoke `docc`, so start by locating it.
         let doccTool = try context.tool(named: "docc")
 
@@ -55,19 +59,5 @@ struct MyDocCPlugin: CommandPlugin {
                 Diagnostics.error("docc invocation failed: \(problem)")
             }
         }
-    }
-
-    /// Bridging implementation of new method to call the old one.
-    func performCommand(
-        context: PluginContext,
-        arguments: [String]
-    ) throws {
-        // Extract the target arguments and pass them on to the old method.
-        var argExtractor = ArgumentExtractor(arguments)
-        let targetNames = argExtractor.extractOption(named: "target")
-        let targets = targetNames.isEmpty
-            ? context.package.targets
-            : try context.package.targets(named: targetNames)
-        try self.performCommand(context: context, targets: targets, arguments: arguments)
     }
 }

@@ -5,7 +5,7 @@ This example command plugin uses the `docc` tool to generate documentation for o
 To invoke it, use:
 
 ```shell
-swift package plugin --target MyLibrary generate-documentation
+swift package generate-documentation --target MyLibrary
 ```
 
 from this directory (or use the `--package-path` option if invoking from a different directory).
